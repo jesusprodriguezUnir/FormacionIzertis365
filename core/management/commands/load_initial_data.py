@@ -60,7 +60,7 @@ class Command(BaseCommand):
         resources_data_tema1 = [
             {
                 'title': 'Guía de Usuario - Casa Rural El Olivo',
-                'description': 'Guía completa de bienvenida para huéspedes. Incluye instrucciones de uso, normas y servicios disponibles.',
+                'description': 'Guía completa de bienvenida para huéspedes: presentación de propiedad, instrucciones de acceso y seguridad, servicios disponibles (Wi-Fi, cocina, piscina), normas de convivencia, ubicación y atractivos cercanos. Creada con Copilot para tono profesional.',
                 'resource_type': 'document',
                 'section': sections['tema-1-copilot-app'],
                 'duration': '15 min',
@@ -68,8 +68,8 @@ class Command(BaseCommand):
                 'order': 1,
             },
             {
-                'title': 'Cuadernos de Formación',
-                'description': 'Material educativo interactivo. Cuadernos con bases de conocimiento sobre normativa de casas rurales.',
+                'title': 'Cuadernos de Formación - Normativa de Casas Rurales',
+                'description': 'Material educativo interactivo con base de conocimiento sobre regulación. Contiene marco legal, seguridad, higiene, derechos del propietario, protección del consumidor. Incluye referencias normativas: BOCM, BOE, Normativa Regional. Acceso a documentos normativos originales, explicaciones simplificadas y ejemplos prácticos.',
                 'resource_type': 'document',
                 'section': sections['tema-1-copilot-app'],
                 'duration': '30 min',
@@ -77,8 +77,8 @@ class Command(BaseCommand):
                 'order': 2,
             },
             {
-                'title': 'Diseño con Designer',
-                'description': 'Crea imágenes profesionales usando Designer. Generación de logos, banners y materiales visuales.',
+                'title': 'Diseño con Designer - Creación de Materiales Visuales',
+                'description': 'Aprende a generar imágenes profesionales con Microsoft Designer + Copilot. Ejercicios: logos minimalistas, banners promocionales, imágenes de interiores/exteriores, materiales marketing. Competencias: prompts descriptivos, edición de imágenes, optimización por plataforma, marca visual consistente. Resultados: 3-5 diseños listos para publicar.',
                 'resource_type': 'exercise',
                 'section': sections['tema-1-copilot-app'],
                 'duration': '45 min',
@@ -86,8 +86,8 @@ class Command(BaseCommand):
                 'order': 3,
             },
             {
-                'title': 'Agente Inteligente - Casa Rural',
-                'description': 'Configura un agente IA para atender a huéspedes. Gestiona consultas y reservas automáticamente.',
+                'title': 'Agente Inteligente - Atención al Cliente con IA',
+                'description': 'Configuración de agente Copilot Studio personalizado. Funcionalidades: consultas disponibilidad, info servicios, asistencia reservas, consultas ubicación/actividades, gestión incidencias, horarios check-in/out. Integración con calendario, base conocimiento, análisis sentimiento, escalado a humanos. Casos uso: atención 24/7, reducción carga admin, experiencia personalizada.',
                 'resource_type': 'tool',
                 'section': sections['tema-1-copilot-app'],
                 'duration': '60 min',
@@ -109,7 +109,7 @@ class Command(BaseCommand):
         resources_data_tema2 = [
             {
                 'title': 'Control Financiero en Excel',
-                'description': 'Crea libros de Excel con Copilot para control de ingresos y gastos de tu negocio.',
+                'description': 'Crea libros Excel con Copilot para gestión financiera. Incluye: tablas ingresos/gastos, gráficos visualización, cálculos automáticos, análisis mensual/trimestral, presupuestos, reportes. Competencias: fórmulas avanzadas, tablas dinámicas, gráficos interpretativos, análisis de datos. Resultados: dashboard financiero funcional para Casa Rural.',
                 'resource_type': 'document',
                 'section': sections['tema-2-copilot-herramientas'],
                 'duration': '30 min',
@@ -117,8 +117,8 @@ class Command(BaseCommand):
                 'order': 1,
             },
             {
-                'title': 'Formularios con Forms',
-                'description': 'Diseña formularios de reserva y consultas usando Microsoft Forms integrado con Copilot.',
+                'title': 'Formularios con Forms - Reservas y Encuestas',
+                'description': 'Diseña formularios profesionales con Microsoft Forms + Copilot. Tipos: formulario reserva con fechas/huéspedes, encuesta satisfacción post-estancia, consulta de servicios adicionales. Análisis de respuestas automático, integración con Excel, reportes visuales. Competencias: diseño UX, validaciones, ramificación lógica.',
                 'resource_type': 'tool',
                 'section': sections['tema-2-copilot-herramientas'],
                 'duration': '20 min',
@@ -126,8 +126,8 @@ class Command(BaseCommand):
                 'order': 2,
             },
             {
-                'title': 'Presentaciones en PowerPoint',
-                'description': 'Genera presentaciones profesionales con Copilot. Material promocional y comercial.',
+                'title': 'Presentaciones en PowerPoint - Promoción Turística',
+                'description': 'Genera presentaciones profesionales 6-8 diapositivas para promocionar Casa Rural. Estructura: Descripción propuesta única, Servicios/comodidades destacados, Ubicación/atractivos turísticos, Experiencias/actividades locales, Cómo reservar + CTA. Tono persuasivo orientado turismo. Imágenes paisajes, interiores acogedores, actividades. Resultados: material promocional listo para agencias turismo.',
                 'resource_type': 'document',
                 'section': sections['tema-2-copilot-herramientas'],
                 'duration': '40 min',
@@ -135,8 +135,8 @@ class Command(BaseCommand):
                 'order': 3,
             },
             {
-                'title': 'Documentos en Word',
-                'description': 'Redacta contenido profesional con Copilot. Cartas, contratos y documentación empresarial.',
+                'title': 'Documentos en Word - Comunicaciones Profesionales',
+                'description': 'Redacta contenido profesional con Copilot en Word. Tipos documentos: confirmaciones reserva, términos & condiciones, políticas cancelación, cartas a huéspedes, contratos de servicios, newsletters, informes. Competencias: tono profesional, estructura clara, formateo avanzado, generación de firmas digitales.',
                 'resource_type': 'document',
                 'section': sections['tema-2-copilot-herramientas'],
                 'duration': '25 min',
@@ -157,8 +157,8 @@ class Command(BaseCommand):
         # Crear recursos para Tema 3
         resources_data_tema3 = [
             {
-                'title': 'Automatización de Procesos',
-                'description': 'Crea flujos de trabajo automáticos para optimizar tu negocio. Integración con aplicaciones Microsoft.',
+                'title': 'Automatización de Procesos con Power Automate',
+                'description': 'Crea flujos de trabajo automáticos para optimizar operaciones Casa Rural. Flujos: solicitud reserva → confirmación email automática, nuevo huésped → envío guía bienvenida, check-out → envío encuesta satisfacción, incidencia → ticket soporte, pago recibido → factura automática. Integraciones: Excel, Outlook, SharePoint, Teams. Competencias: triggers, acciones condicionales, variables, loop handling.',
                 'resource_type': 'exercise',
                 'section': sections['tema-3-power-automate'],
                 'duration': '50 min',
@@ -179,8 +179,8 @@ class Command(BaseCommand):
         # Crear recursos para Tema 4
         resources_data_tema4 = [
             {
-                'title': 'Agente de Clasificación de Incidencias',
-                'description': 'Crea un agente que clasifique automáticamente incidencias en categorías. Material, Limpieza, Mantenimiento, Urgencia Grave.',
+                'title': 'Agente de Clasificación de Incidencias - Mantenimiento',
+                'description': 'Crea agente Copilot Studio que clasifique automáticamente incidencias reportadas. Categorías: Material (enseres/equipamiento), Limpieza (sábanas/baños), Mantenimiento (tuberías/electricidad), Urgencia Grave (seguridad/salud). Análisis automático, asignación a técnicos, notificaciones. Machine Learning aprende patrones incidencias. Resultados: reducción 70% tiempo triage, mejor priorización urgencias.',
                 'resource_type': 'tool',
                 'section': sections['tema-4-copilot-studio'],
                 'duration': '45 min',
@@ -189,16 +189,16 @@ class Command(BaseCommand):
             },
             {
                 'title': 'Configuración del Agente',
-                'description': 'Aprende a configurar y personalizar agentes en Copilot Studio. Instrucciones y mejores prácticas.',
+                'description': 'Configura parámetros del agente Copilot Studio: Instrucciones del sistema (rol/tono/contexto). Modelos de lenguaje (GPT-4/3.5). Fuentes de datos (SharePoint/Excel/Teams). Personas (roles específicos). Acciones de escalada (criterios/destinos). Pruebas de conversación (casos uso). Análisis de logs y feedback usuario. Competencias: prompts avanzados, flujos condicionales, integración datos, monitoreo performance.',
                 'resource_type': 'document',
                 'section': sections['tema-4-copilot-studio'],
                 'duration': '30 min',
-                'difficulty': 'intermedio',
+                'difficulty': 'avanzado',
                 'order': 2,
             },
             {
                 'title': 'Base de Conocimiento (RAG)',
-                'description': 'Integra documentos y manuales en tu agente. Sistema de Recuperación Aumentada por Generación.',
+                'description': 'Integra Base de Conocimiento RAG (Retrieval-Augmented Generation) en agente Copilot Studio. Conecta múltiples fuentes: manuales PDF, políticas Word, normativas Excel, FAQs SharePoint, wikis internas. Sistema busca contexto relevante automáticamente. Casos uso: soporte técnico contextualizado, normativa legal actualizada, procedimientos operacionales. Configuración: indexación documentos, relevancia búsqueda, actualización periódica. Competencias: gestión documental, búsqueda semántica, análisis relevancia.',
                 'resource_type': 'document',
                 'section': sections['tema-4-copilot-studio'],
                 'duration': '35 min',
