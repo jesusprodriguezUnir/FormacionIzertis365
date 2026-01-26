@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Section, Resource, Document
+from .models import Section, Resource, Document, Slide
 
 
 @admin.register(Section)
@@ -45,3 +45,25 @@ class DocumentAdmin(admin.ModelAdmin):
         ('Configuración', {'fields': ('order', 'is_active')}),
     )
     readonly_fields = ('created_at', 'updated_at')
+
+
+@admin.register(Slide)
+class SlideAdmin(admin.ModelAdmin):
+    list_display = ('slide_number', 'title_truncated', 'resource', 'created_at')
+    list_filter = ('resource', 'created_at')
+    search_fields = ('title', 'content', 'resource__title')
+    ordering = ('resource', 'slide_number')
+    fieldsets = (
+        ('Información Básica', {'fields': ('resource', 'slide_number', 'title')}),
+        ('Contenido', {'fields': ('content', 'notes')}),
+        ('Imagen', {'fields': ('image',)}),
+        ('Configuración', {'fields': ('order',)}),
+    )
+    readonly_fields = ('created_at', 'updated_at')
+    
+    def title_truncated(self, obj):
+        """Muestra el título truncado en el listado."""
+        if obj.title:
+            return obj.title[:50] + '...' if len(obj.title) > 50 else obj.title
+        return obj.content[:50] + '...' if len(obj.content) > 50 else obj.content
+    title_truncated.short_description = 'Título/Contenido'

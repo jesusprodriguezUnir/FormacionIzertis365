@@ -108,3 +108,25 @@ class Document(models.Model):
         if not self.slug:
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)
+
+
+class Slide(models.Model):
+    """Representa una diapositiva de una presentación."""
+    resource = models.ForeignKey(Resource, on_delete=models.CASCADE, related_name='slides')
+    slide_number = models.IntegerField(help_text='Número de la diapositiva')
+    title = models.CharField(max_length=300, blank=True, help_text='Título extraído de la diapositiva')
+    content = models.TextField(blank=True, help_text='Contenido textual de la diapositiva')
+    image = models.ImageField(upload_to='slides/', blank=True, null=True, help_text='Captura de la diapositiva')
+    notes = models.TextField(blank=True, help_text='Notas del presentador')
+    order = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['resource', 'slide_number']
+        unique_together = [['resource', 'slide_number']]
+        verbose_name = 'Diapositiva'
+        verbose_name_plural = 'Diapositivas'
+
+    def __str__(self):
+        return f"Slide {self.slide_number}: {self.title or self.content[:50]}"

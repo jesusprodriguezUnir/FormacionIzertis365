@@ -13,6 +13,7 @@ urlpatterns = [
     
     # Recursos
     path('recurso/<slug:slug>/', views.ResourceDetailView.as_view(), name='resource_detail'),
+    path('recurso/<slug:slug>/slides/', views.SlideListView.as_view(), name='slide_list'),
     
     # Búsqueda
     path('buscar/', views.SearchView.as_view(), name='search'),

@@ -1,0 +1,237 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ resource.title }} - Presentación{% endblock %}
+
+{% block content %}
+<div style="background: #1a1a2e; min-height: 100vh;">
+    <!-- Header Minimizado -->
+    <div style="background: #16213e; padding: 1rem; border-bottom: 2px solid #0f3460;">
+        <div class="container-lg">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h5 class="mb-0 text-white" style="font-weight: 300;">
+                        <small style="opacity: 0.7;">{{ resource.section.title }}</small><br>
+                        {{ resource.title }}
+                    </h5>
+                </div>
+                <div class="col-md-4 text-end">
+                    <a href="{% url 'core:resource_detail' resource.slug %}" class="btn btn-sm btn-outline-light">
+                        <i class="bi bi-x-lg"></i> Cerrar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Área principal de presentación -->
+    <div class="container-lg py-4">
+        {% if slides_count > 0 %}
+        <div class="row g-4">
+            <!-- Visor principal -->
+            <div class="col-lg-9">
+                <div id="presentationViewer" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                     border-radius: 15px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.5); 
+                     aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center;">
+                    
+                    {% for slide in slides %}
+                    <div class="slide-frame" data-slide="{{ slide.slide_number }}" 
+                         style="display: {% if slide.slide_number == current_slide_number %}flex{% else %}none{% endif %}; 
+                         width: 100%; height: 100%; flex-direction: column; 
+                         justify-content: center; align-items: center; 
+                         padding: 60px; text-align: center; color: white; 
+                         background: {% cycle 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)' %};">
+                        
+                        <!-- Número de slide pequeño en la esquina -->
+                        <div style="position: absolute; top: 20px; right: 30px; opacity: 0.6; font-size: 0.9rem;">
+                            {{ slide.slide_number }}/{{ slides_count }}
+                        </div>
+                        
+                        <!-- Contenido -->
+                        <div style="max-width: 90%; animation: fadeIn 0.5s ease-in;">
+                            <!-- Título -->
+                            {% if slide.title %}
+                            <h1 style="font-weight: 700; font-size: 3rem; margin-bottom: 30px; 
+                                      text-shadow: 2px 2px 8px rgba(0,0,0,0.3); line-height: 1.2;">
+                                {{ slide.title }}
+                            </h1>
+                            {% endif %}
+                            
+                            <!-- Contenido principal -->
+                            <div style="font-size: 1.2rem; line-height: 1.8; 
+                                      text-shadow: 1px 1px 4px rgba(0,0,0,0.2); 
+                                      white-space: pre-wrap; word-wrap: break-word;
+                                      max-height: 400px; overflow-y: auto;">
+                                {{ slide.content }}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- Controles de navegación -->
+                <div style="display: flex; justify-content: space-between; align-items: center; 
+                          margin-top: 30px; padding: 0 20px;">
+                    <button onclick="previousSlide()" class="btn btn-outline-light">
+                        <i class="bi bi-chevron-left"></i> Anterior
+                    </button>
+                    
+                    <div style="text-align: center; color: white;">
+                        <span id="currentSlideNum">{{ current_slide_number }}</span> / 
+                        <span>{{ slides_count }}</span>
+                    </div>
+                    
+                    <button onclick="nextSlide()" class="btn btn-outline-light">
+                        Siguiente <i class="bi bi-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Panel lateral con thumbnails -->
+            <div class="col-lg-3">
+                <div style="background: #0f3460; border-radius: 10px; padding: 20px; 
+                          height: fit-content; max-height: 700px; overflow-y: auto;">
+                    <h6 class="text-white mb-3" style="font-weight: 600;">
+                        <i class="bi bi-list"></i> Diapositivas
+                    </h6>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        {% for slide in slides %}
+                        <button onclick="goToSlide({{ slide.slide_number }})" 
+                                class="slide-thumbnail {% if slide.slide_number == current_slide_number %}active{% endif %}"
+                                style="background: {% cycle '#1e90ff' '#ff6b6b' '#00d4ff' '#51cf66' %}; 
+                                       border: {% if slide.slide_number == current_slide_number %}3px solid white{% else %}2px solid transparent{% endif %}; 
+                                       color: white; padding: 12px; border-radius: 8px; 
+                                       text-align: left; cursor: pointer; transition: all 0.3s; 
+                                       font-size: 0.85rem; line-height: 1.3;">
+                            <strong>{{ slide.slide_number }}</strong><br>
+                            <small style="opacity: 0.9;">{{ slide.title|truncatechars:40 }}</small>
+                        </button>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info del recurso -->
+        <div style="margin-top: 40px; padding: 30px; background: #0f3460; 
+                  border-radius: 10px; color: white;">
+            <div class="row">
+                <div class="col-md-6">
+                    <h6 style="color: #4facfe; margin-bottom: 15px;">Información del Módulo</h6>
+                    <p class="mb-2"><strong>Sección:</strong> {{ resource.section.title }}</p>
+                    <p class="mb-2"><strong>Dificultad:</strong> {{ resource.get_difficulty_display }}</p>
+                    {% if resource.duration %}
+                    <p class="mb-0"><strong>Duración:</strong> {{ resource.duration }}</p>
+                    {% endif %}
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="{% url 'core:resource_detail' resource.slug %}" class="btn btn-primary">
+                        <i class="bi bi-info-circle"></i> Ver Detalles Completos
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        {% else %}
+        <!-- No hay slides -->
+        <div class="alert alert-warning" style="color: white; background: #664d03; border: 1px solid #997404;">
+            <i class="bi bi-exclamation-triangle"></i> No hay diapositivas disponibles para esta presentación.
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .slide-frame {
+        animation: fadeIn 0.5s ease-in;
+    }
+
+    .slide-thumbnail:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .slide-thumbnail.active {
+        box-shadow: 0 0 20px rgba(255,255,255,0.5);
+    }
+
+    /* Scrollbar personalizado */
+    .col-lg-3 div::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .col-lg-3 div::-webkit-scrollbar-track {
+        background: #1a3a52;
+        border-radius: 10px;
+    }
+
+    .col-lg-3 div::-webkit-scrollbar-thumb {
+        background: #4facfe;
+        border-radius: 10px;
+    }
+
+    .col-lg-3 div::-webkit-scrollbar-thumb:hover {
+        background: #0f3460;
+    }
+</style>
+
+<script>
+    let currentSlide = {{ current_slide_number }};
+    const totalSlides = {{ slides_count }};
+
+    function showSlide(slideNum) {
+        // Ocultar todos los slides
+        document.querySelectorAll('.slide-frame').forEach(frame => {
+            frame.style.display = 'none';
+        });
+        
+        // Mostrar el slide actual
+        const activeSlide = document.querySelector(`[data-slide="${slideNum}"]`);
+        if (activeSlide) {
+            activeSlide.style.display = 'flex';
+            currentSlide = slideNum;
+            document.getElementById('currentSlideNum').textContent = slideNum;
+            
+            // Actualizar thumbnail activo
+            document.querySelectorAll('.slide-thumbnail').forEach(thumb => {
+                thumb.classList.remove('active');
+            });
+            document.querySelector(`button[onclick="goToSlide(${slideNum})"]`).classList.add('active');
+        }
+    }
+
+    function nextSlide() {
+        if (currentSlide < totalSlides) {
+            showSlide(currentSlide + 1);
+        }
+    }
+
+    function previousSlide() {
+        if (currentSlide > 1) {
+            showSlide(currentSlide - 1);
+        }
+    }
+
+    function goToSlide(slideNum) {
+        showSlide(slideNum);
+    }
+
+    // Navegación con teclado
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'ArrowRight') nextSlide();
+        if (event.key === 'ArrowLeft') previousSlide();
+    });
+</script>
+{% endblock %}
+
