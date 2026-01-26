@@ -1,0 +1,176 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ resource.title }} - Portal Educativo{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); color: white; padding: 3rem 0;">
+    <div class="container-lg">
+        <nav aria-label="breadcrumb" class="mb-3">
+            <ol class="breadcrumb" style="background-color: transparent; color: white;">
+                <li class="breadcrumb-item"><a href="{% url 'core:index' %}" class="text-white">Inicio</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'core:section_list' %}" class="text-white">Secciones</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'core:section_detail' resource.section.slug %}" class="text-white">{{ resource.section.title }}</a></li>
+                <li class="breadcrumb-item active" style="color: rgba(255,255,255,0.8);">{{ resource.title }}</li>
+            </ol>
+        </nav>
+        
+        <div class="row align-items-end">
+            <div class="col-md-8">
+                <h1>{{ resource.title }}</h1>
+                <p class="lead mb-0">{{ resource.description }}</p>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <span class="resource-tag" style="font-size: 1rem; padding: 0.5rem 1rem;">{{ resource.get_resource_type_display }}</span>
+                <span class="resource-tag" style="font-size: 1rem; padding: 0.5rem 1rem; background-color: {% if resource.difficulty == 'basico' %}#28a745{% elif resource.difficulty == 'intermedio' %}#ffc107{% else %}#dc3545{% endif %};">
+                    {{ resource.get_difficulty_display }}
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-lg py-5">
+    <div class="row">
+        <!-- Main Content -->
+        <div class="col-lg-8">
+            {% if resource.thumbnail %}
+            <img src="{{ resource.thumbnail.url }}" class="img-fluid rounded mb-4" alt="{{ resource.title }}">
+            {% endif %}
+            
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-info-circle"></i> Detalles del Recurso</h5>
+                    <dl class="row text-sm">
+                        <dt class="col-sm-3">Sección:</dt>
+                        <dd class="col-sm-9"><a href="{% url 'core:section_detail' resource.section.slug %}">{{ resource.section.title }}</a></dd>
+                        
+                        <dt class="col-sm-3">Dificultad:</dt>
+                        <dd class="col-sm-9">{{ resource.get_difficulty_display }}</dd>
+                        
+                        {% if resource.duration %}
+                        <dt class="col-sm-3">Duración:</dt>
+                        <dd class="col-sm-9">{{ resource.duration }}</dd>
+                        {% endif %}
+                        
+                        <dt class="col-sm-3">Creado:</dt>
+                        <dd class="col-sm-9">{{ resource.created_at|date:'d/m/Y \a \l\a\s H:i' }}</dd>
+                    </dl>
+                </div>
+            </div>
+            
+            <!-- Resource Content -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-file-text"></i> Descripción Completa</h5>
+                    <div class="lh-lg">
+                        {{ resource.description|linebreaks }}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Resource Links -->
+            {% if resource.url or resource.document %}
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-download"></i> Acceder al Recurso</h5>
+                    <div class="d-flex flex-column gap-2">
+                        {% if resource.url %}
+                        <a href="{{ resource.url }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+                            <i class="bi bi-link-45deg"></i> Abrir Enlace Externo
+                            <i class="bi bi-box-arrow-up-right"></i>
+                        </a>
+                        {% endif %}
+                        
+                        {% if resource.document %}
+                        <a href="{{ resource.document.url }}" class="btn btn-success">
+                            <i class="bi bi-download"></i> Descargar Documento
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Documents -->
+            {% if documents %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-file-earmark"></i> Documentos Relacionados</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    {% for doc in documents %}
+                    <div class="list-group-item">
+                        <div class="d-flex align-items-start">
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1">{{ doc.title }}</h6>
+                                <p class="text-muted mb-0 small">{{ doc.get_document_type_display }} | <small>{{ doc.created_at|date:'d/m/Y' }}</small></p>
+                                <p class="text-muted small">{{ doc.description }}</p>
+                            </div>
+                            <a href="{{ doc.file.url }}" class="btn btn-sm btn-outline-primary ms-2">
+                                <i class="bi bi-download"></i>
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Quick Info -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-lightning"></i> Información Rápida</h5>
+                    <div class="d-grid gap-2">
+                        {% if resource.url %}
+                        <a href="{{ resource.url }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm">
+                            <i class="bi bi-box-arrow-up-right"></i> Ir al Recurso
+                        </a>
+                        {% endif %}
+                        {% if resource.document %}
+                        <a href="{{ resource.document.url }}" class="btn btn-success btn-sm">
+                            <i class="bi bi-download"></i> Descargar
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Related Resources -->
+            {% if related_resources %}
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-link-45deg"></i> Recursos Relacionados</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    {% for rel_resource in related_resources %}
+                    <a href="{% url 'core:resource_detail' rel_resource.slug %}" class="list-group-item list-group-item-action">
+                        <div class="d-flex align-items-start">
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1">{{ rel_resource.title }}</h6>
+                                <small class="text-muted">{{ rel_resource.get_resource_type_display }}</small>
+                            </div>
+                            <i class="bi bi-arrow-right"></i>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Navigation -->
+    <div class="row mt-5">
+        <div class="col">
+            <a href="{% url 'core:section_detail' resource.section.slug %}" class="btn btn-outline-primary">
+                <i class="bi bi-arrow-left"></i> Volver a {{ resource.section.title }}
+            </a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

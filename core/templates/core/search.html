@@ -1,0 +1,162 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Búsqueda - Portal Educativo{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div class="bg-white py-4 mb-5">
+    <div class="container-lg">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-3">
+                <li class="breadcrumb-item"><a href="{% url 'core:index' %}">Inicio</a></li>
+                <li class="breadcrumb-item active">Búsqueda</li>
+            </ol>
+        </nav>
+        <h1>Búsqueda</h1>
+    </div>
+</div>
+
+<div class="container-lg mb-5">
+    <!-- Search Form -->
+    <div class="row mb-5">
+        <div class="col-lg-8 offset-lg-2">
+            <form method="GET" action="{% url 'core:search' %}">
+                <div class="search-form">
+                    <input type="search" class="form-control form-control-lg" placeholder="¿Qué buscas?" name="q" value="{{ query }}" autofocus>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i></button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    {% if query %}
+    <!-- Results -->
+    <div class="row">
+        <div class="col">
+            <p class="text-muted">
+                Resultados para: <strong>"{{ query }}"</strong>
+            </p>
+        </div>
+    </div>
+    
+    <!-- Sections Results -->
+    {% if sections %}
+    <div class="mb-5">
+        <h3 class="mb-3">
+            <i class="bi bi-folder2"></i> Secciones ({{ sections.count }})
+        </h3>
+        <div class="row g-4">
+            {% for section in sections %}
+            <div class="col-md-6 col-lg-4">
+                <a href="{% url 'core:section_detail' section.slug %}" class="section-card">
+                    <div class="card">
+                        {% if section.image %}
+                        <img src="{{ section.image.url }}" class="card-img-top" alt="{{ section.title }}" style="height: 200px; object-fit: cover;">
+                        {% else %}
+                        <div class="card-img-top" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">
+                            <i class="bi {{ section.icon }}"></i>
+                        </div>
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ section.title }}</h5>
+                            <p class="card-text text-muted">{{ section.description|truncatewords:15 }}</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Resources Results -->
+    {% if resources %}
+    <div class="mb-5">
+        <h3 class="mb-3">
+            <i class="bi bi-collection"></i> Recursos ({{ resources.count }})
+        </h3>
+        <div class="row g-4">
+            {% for resource in resources %}
+            <div class="col-md-6 col-lg-4">
+                <a href="{% url 'core:resource_detail' resource.slug %}" class="section-card">
+                    <div class="card">
+                        {% if resource.thumbnail %}
+                        <img src="{{ resource.thumbnail.url }}" class="card-img-top" alt="{{ resource.title }}" style="height: 200px; object-fit: cover;">
+                        {% else %}
+                        <div class="card-img-top" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 2.5rem;">
+                            {% if resource.resource_type == 'link' %}
+                            <i class="bi bi-link-45deg"></i>
+                            {% elif resource.resource_type == 'document' %}
+                            <i class="bi bi-file-text"></i>
+                            {% elif resource.resource_type == 'video' %}
+                            <i class="bi bi-play-circle"></i>
+                            {% elif resource.resource_type == 'exercise' %}
+                            <i class="bi bi-pencil-square"></i>
+                            {% elif resource.resource_type == 'tool' %}
+                            <i class="bi bi-tools"></i>
+                            {% else %}
+                            <i class="bi bi-image"></i>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                        <div class="card-body">
+                            <div class="mb-2">
+                                <span class="resource-tag">{{ resource.get_resource_type_display }}</span>
+                            </div>
+                            <h5 class="card-title">{{ resource.title }}</h5>
+                            <p class="card-text text-muted">{{ resource.description|truncatewords:15 }}</p>
+                            <small class="text-muted">{{ resource.section.title }}</small>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Documents Results -->
+    {% if documents %}
+    <div class="mb-5">
+        <h3 class="mb-3">
+            <i class="bi bi-file-earmark"></i> Documentos ({{ documents.count }})
+        </h3>
+        <div class="list-group">
+            {% for doc in documents %}
+            <a href="{% url 'core:resource_detail' doc.resource.slug %}" class="list-group-item list-group-item-action">
+                <div class="d-flex align-items-start">
+                    <i class="bi bi-file-earmark me-3 mt-1"></i>
+                    <div class="flex-grow-1">
+                        <h6 class="mb-1">{{ doc.title }}</h6>
+                        <p class="text-muted mb-0 small">
+                            {{ doc.get_document_type_display }} 
+                            {% if doc.resource %} • <a href="{% url 'core:resource_detail' doc.resource.slug %}">{{ doc.resource.title }}</a>{% endif %}
+                        </p>
+                    </div>
+                    <i class="bi bi-arrow-right"></i>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- No Results -->
+    {% if not sections and not resources and not documents %}
+    <div class="alert alert-warning text-center">
+        <i class="bi bi-exclamation-triangle"></i>
+        <p class="mb-0">No se encontraron resultados para "<strong>{{ query }}</strong>"</p>
+        <small class="text-muted">Intenta con otras palabras clave</small>
+    </div>
+    {% endif %}
+    
+    {% else %}
+    <!-- Empty State -->
+    <div class="alert alert-info text-center">
+        <i class="bi bi-search"></i>
+        <p class="mb-0">Utiliza el formulario de búsqueda para encontrar contenido</p>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

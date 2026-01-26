@@ -1,0 +1,69 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Secciones - Portal Educativo{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div class="bg-white py-4 mb-5">
+    <div class="container-lg">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'core:index' %}">Inicio</a></li>
+                <li class="breadcrumb-item active">Secciones</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="container-lg mb-5">
+    <div class="row mb-5">
+        <div class="col-lg-8">
+            <h1>Secciones de Formación</h1>
+            <p class="lead text-muted">Accede a todas las secciones de contenido organizadas por temas</p>
+        </div>
+        <div class="col-lg-4">
+            <form class="search-form" method="GET" action="{% url 'core:search' %}">
+                <input type="search" class="form-control" placeholder="Buscar secciones..." name="q">
+                <button type="submit"><i class="bi bi-search"></i></button>
+            </form>
+        </div>
+    </div>
+
+    {% if sections %}
+    <div class="row g-4">
+        {% for section in sections %}
+        <div class="col-md-6 col-lg-4">
+            <a href="{% url 'core:section_detail' section.slug %}" class="section-card">
+                <div class="card">
+                    {% if section.image %}
+                    <img src="{{ section.image.url }}" class="card-img-top" alt="{{ section.title }}" style="height: 200px; object-fit: cover;">
+                    {% else %}
+                    <div class="card-img-top" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">
+                        <i class="bi {{ section.icon }}"></i>
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ section.title }}</h5>
+                        <p class="card-text text-muted">{{ section.description|truncatewords:20 }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">
+                                <i class="bi bi-box"></i> {{ section.resources.all|length }} recursos
+                            </small>
+                            <small class="text-primary">
+                                <i class="bi bi-arrow-right"></i>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i> No hay secciones disponibles en este momento.
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

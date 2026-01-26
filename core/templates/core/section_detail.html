@@ -1,0 +1,101 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ section.title }} - Portal Educativo{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); color: white; padding: 3rem 0;">
+    <div class="container-lg">
+        <nav aria-label="breadcrumb" class="mb-3">
+            <ol class="breadcrumb" style="background-color: transparent; color: white;">
+                <li class="breadcrumb-item"><a href="{% url 'core:index' %}" class="text-white">Inicio</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'core:section_list' %}" class="text-white">Secciones</a></li>
+                <li class="breadcrumb-item active" style="color: rgba(255,255,255,0.8);">{{ section.title }}</li>
+            </ol>
+        </nav>
+        <h1>{{ section.title }}</h1>
+        <p class="lead mb-0">{{ section.description }}</p>
+    </div>
+</div>
+
+<div class="container-lg py-5">
+    {% if resources %}
+    <div class="row mb-5">
+        <div class="col-lg-8">
+            <h2 class="mb-4"><i class="bi bi-collection"></i> Recursos disponibles</h2>
+            
+            <div class="row g-4">
+                {% for resource in resources %}
+                <div class="col-md-6">
+                    <a href="{% url 'core:resource_detail' resource.slug %}" class="section-card">
+                        <div class="card">
+                            {% if resource.thumbnail %}
+                            <img src="{{ resource.thumbnail.url }}" class="card-img-top" alt="{{ resource.title }}" style="height: 200px; object-fit: cover;">
+                            {% else %}
+                            <div class="card-img-top" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 2.5rem;">
+                                {% if resource.resource_type == 'link' %}
+                                <i class="bi bi-link-45deg"></i>
+                                {% elif resource.resource_type == 'document' %}
+                                <i class="bi bi-file-text"></i>
+                                {% elif resource.resource_type == 'video' %}
+                                <i class="bi bi-play-circle"></i>
+                                {% elif resource.resource_type == 'exercise' %}
+                                <i class="bi bi-pencil-square"></i>
+                                {% elif resource.resource_type == 'tool' %}
+                                <i class="bi bi-tools"></i>
+                                {% else %}
+                                <i class="bi bi-image"></i>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                            <div class="card-body">
+                                <div class="mb-2">
+                                    <span class="resource-tag">{{ resource.get_resource_type_display }}</span>
+                                    <span class="resource-tag" style="background-color: {% if resource.difficulty == 'basico' %}#28a745{% elif resource.difficulty == 'intermedio' %}#ffc107{% else %}#dc3545{% endif %};">
+                                        {{ resource.get_difficulty_display }}
+                                    </span>
+                                </div>
+                                <h5 class="card-title">{{ resource.title }}</h5>
+                                <p class="card-text text-muted">{{ resource.description|truncatewords:20 }}</p>
+                                <small class="text-muted">
+                                    {% if resource.duration %}<i class="bi bi-clock"></i> {{ resource.duration }}{% endif %}
+                                </small>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-info-circle"></i> Información</h5>
+                    <p class="text-muted mb-0">
+                        <strong>Total de recursos:</strong> {{ resources.count }}
+                    </p>
+                    <p class="text-muted">
+                        <strong>Última actualización:</strong> {{ section.updated_at|date:'d/m/Y' }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i> Esta sección no tiene recursos disponibles aún.
+    </div>
+    {% endif %}
+    
+    <div class="row mt-5">
+        <div class="col">
+            <a href="{% url 'core:section_list' %}" class="btn btn-outline-primary">
+                <i class="bi bi-arrow-left"></i> Volver a secciones
+            </a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
